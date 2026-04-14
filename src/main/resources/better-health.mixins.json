@@ -1,9 +1,5 @@
 {
-    "required": true,
-    "package": "com.betterhealth.mixin",
-    "compatibilityLevel": "JAVA_21",
-    "client": ["HealthBarMixin"],
-    "injectors": {
-        "defaultRequire": 1
-    }
+  "required": true,
+  "compatibilityLevel": "JAVA_21",
+  "client": ["com.betterhealth.mixin.HealthBarMixin"]
 }
