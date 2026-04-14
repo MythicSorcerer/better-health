@@ -24,6 +24,7 @@ public class BetterHealthConfigScreen {
         ConfigCategory bars = builder.getOrCreateCategory(Text.literal("Bar Settings"));
         ConfigCategory hunger = builder.getOrCreateCategory(Text.literal("Hunger Bar"));
         ConfigCategory colors = builder.getOrCreateCategory(Text.literal("Colors"));
+        ConfigCategory tuning = builder.getOrCreateCategory(Text.literal("Tuning"));
         ConfigCategory advanced = builder.getOrCreateCategory(Text.literal("Advanced"));
         
         ConfigEntryBuilder entryBuilder = ConfigEntryBuilder.create();
@@ -66,6 +67,18 @@ public class BetterHealthConfigScreen {
                 .setTooltip(Text.literal("Number of decimal places to show"))
                 .setSaveConsumer(value -> config.precisionDigits = value)
                 .build());
+
+        tuning.addEntry(entryBuilder.startIntSlider(Text.literal("Text Gap"), config.textGap, 0, 24)
+                .setDefaultValue(4)
+                .setTooltip(Text.literal("Padding between the health text and the nearest bar block"))
+                .setSaveConsumer(value -> config.textGap = value)
+                .build());
+
+        tuning.addEntry(entryBuilder.startIntSlider(Text.literal("Text Y Offset"), config.textYOffset, -40, 40)
+                .setDefaultValue(0)
+                .setTooltip(Text.literal("Moves the health text up or down for visual calibration"))
+                .setSaveConsumer(value -> config.textYOffset = value)
+                .build());
         
         bars.addEntry(entryBuilder.startBooleanToggle(Text.literal("Full Bar Mode"), config.fullBarMode)
                 .setDefaultValue(true)
@@ -89,6 +102,12 @@ public class BetterHealthConfigScreen {
                 .setDefaultValue(0)
                 .setTooltip(Text.literal("Moves bars up/down for quick visual tuning"))
                 .setSaveConsumer(value -> config.barYOffset = value)
+                .build());
+
+        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Row Spacing"), config.barSpacing, 0, 8)
+                .setDefaultValue(1)
+                .setTooltip(Text.literal("Spacing between stacked saturation, hunger, and health rows"))
+                .setSaveConsumer(value -> config.barSpacing = value)
                 .build());
         
         bars.addEntry(entryBuilder.startIntSlider(Text.literal("Hunger Bar Height"), config.hungerBarHeight, 0, 10)
@@ -235,6 +254,12 @@ public class BetterHealthConfigScreen {
                 .setDefaultValue(false)
                 .setTooltip(Text.literal("When enabled, floating numbers move downward instead of upward"))
                 .setSaveConsumer(value -> config.floatingNumbersFlowDown = value)
+                .build());
+
+        advanced.addEntry(entryBuilder.startIntSlider(Text.literal("Floating Number Sway"), config.floatingNumbersSway, 0, 40)
+                .setDefaultValue(15)
+                .setTooltip(Text.literal("How wide the floating number S-curve drifts sideways"))
+                .setSaveConsumer(value -> config.floatingNumbersSway = value)
                 .build());
         
         advanced.addEntry(entryBuilder.startBooleanToggle(Text.literal("Track Historical Max"), config.trackHistoricalMax)

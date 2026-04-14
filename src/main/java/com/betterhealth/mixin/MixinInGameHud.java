@@ -59,7 +59,7 @@ public class MixinInGameHud {
             int barWidth = config.fullBarMode ? FULL_BAR_WIDTH : HALF_BAR_WIDTH;
             int x = getAlignedX(config, screenWidth, barWidth);
 
-            int barSpacing = 1;
+            int barSpacing = Math.max(0, config.barSpacing);
 
             boolean showHungerBar = config.showHungerBar && config.hungerBarHeight > 0;
             boolean showSaturationBar = config.showSaturationBar && config.saturationBarHeight > 0;
@@ -69,6 +69,8 @@ public class MixinInGameHud {
 
             int minBarY = Integer.MAX_VALUE;
             int maxBarY = Integer.MIN_VALUE;
+            int textAnchorTop = Integer.MAX_VALUE;
+            int textAnchorBottom = Integer.MIN_VALUE;
             int healthCenterX = x + (barWidth / 2);
 
             boolean splitHalfMode = !config.fullBarMode && config.splitBarsInHalfMode && showHungerBar;
@@ -94,15 +96,21 @@ public class MixinInGameHud {
 
                 minBarY = Math.min(minBarY, splitTopY);
                 maxBarY = Math.max(maxBarY, splitTopY + healthHeight - 1);
+                textAnchorTop = splitTopY;
+                textAnchorBottom = splitTopY + healthHeight - 1;
                 healthCenterX = healthSegmentX + (healthSegmentWidth / 2);
             } else {
                 int stackedTotalHeight = getStackedTotalHeight(config, healthHeight, hungerHeight, saturationHeight, barSpacing, showHungerBar, showSaturationBar);
 
                 int healthY;
                 int hungerTopY = Integer.MIN_VALUE;
+                int topAnchoredTop = Integer.MAX_VALUE;
+                int topAnchoredBottom = Integer.MIN_VALUE;
 
                 if (config.verticalAnchorMode == 2) {
                     healthY = TOP_ANCHOR_Y + config.barYOffset;
+                    textAnchorTop = healthY;
+                    textAnchorBottom = healthY + healthHeight - 1;
                     if (showHungerBar || showSaturationBar) {
                         hungerTopY = (screenHeight - 36 - (stackedTotalHeight - healthHeight) + 1) + config.barYOffset;
                     }
@@ -149,6 +157,8 @@ public class MixinInGameHud {
                     renderHealthBar(context, config, x, healthY, barWidth, healthHeight, currentHealth, maxHealth, absorption, displayMax);
                     minBarY = Math.min(minBarY, healthY);
                     maxBarY = Math.max(maxBarY, healthY + healthHeight - 1);
+                    textAnchorTop = minBarY;
+                    textAnchorBottom = maxBarY;
                     healthCenterX = x + (barWidth / 2);
                     hungerTopY = Integer.MIN_VALUE;
                 }
@@ -160,18 +170,26 @@ public class MixinInGameHud {
                             renderSimpleBar(context, config, x, currentY, barWidth, saturationHeight, Math.min(saturation / 20f, 1.0f), config.saturationBarColor);
                             minBarY = Math.min(minBarY, currentY);
                             maxBarY = Math.max(maxBarY, currentY + saturationHeight - 1);
+                            topAnchoredTop = Math.min(topAnchoredTop, currentY);
+                            topAnchoredBottom = Math.max(topAnchoredBottom, currentY + saturationHeight - 1);
                             currentY += saturationHeight + barSpacing;
                         }
                         if (showHungerBar) {
                             renderSimpleBar(context, config, x, currentY, barWidth, hungerHeight, Math.min(hunger / 20f, 1.0f), config.hungerBarColor);
                             minBarY = Math.min(minBarY, currentY);
                             maxBarY = Math.max(maxBarY, currentY + hungerHeight - 1);
+                            topAnchoredTop = Math.min(topAnchoredTop, currentY);
+                            topAnchoredBottom = Math.max(topAnchoredBottom, currentY + hungerHeight - 1);
                         }
                     }
 
                     renderHealthBar(context, config, x, healthY, barWidth, healthHeight, currentHealth, maxHealth, absorption, displayMax);
                     minBarY = Math.min(minBarY, healthY);
                     maxBarY = Math.max(maxBarY, healthY + healthHeight - 1);
+                    if (config.verticalAnchorMode == 3 && topAnchoredTop != Integer.MAX_VALUE) {
+                        textAnchorTop = topAnchoredTop;
+                        textAnchorBottom = topAnchoredBottom;
+                    }
                     healthCenterX = x + (barWidth / 2);
                 }
             }
@@ -179,10 +197,7 @@ public class MixinInGameHud {
             String healthText = getHealthText(config, currentHealth, maxHealth, absorption, hunger);
 
             int textX = getTextX(config, client, screenWidth, x, barWidth, healthText);
-            int textY = Math.max(2, minBarY - 10);
-            if (minBarY == Integer.MAX_VALUE) {
-                textY = TOP_ANCHOR_Y;
-            }
+            int textY = getTextY(config, client, screenHeight, textAnchorTop, textAnchorBottom, minBarY);
             context.drawTextWithShadow(client.textRenderer, healthText, textX, textY, 0xFFFFFFFF);
 
             if (config.trackHistoricalMax) {
@@ -242,13 +257,39 @@ public class MixinInGameHud {
 
     private int getTextX(BetterHealthConfig config, MinecraftClient client, int screenWidth, int barX, int barWidth, String text) {
         int textWidth = client.textRenderer.getWidth(text);
+        int x;
         if (config.horizontalAlignment == 0) {
-            return barX;
+            x = barX;
+        } else if (config.horizontalAlignment == 2) {
+            x = barX + barWidth - textWidth;
+        } else {
+            x = (screenWidth - textWidth) / 2;
         }
-        if (config.horizontalAlignment == 2) {
-            return barX + barWidth - textWidth;
+        return MathHelper.clamp(x, 2, Math.max(2, screenWidth - textWidth - 2));
+    }
+
+    private int getTextY(
+            BetterHealthConfig config,
+            MinecraftClient client,
+            int screenHeight,
+            int textAnchorTop,
+            int textAnchorBottom,
+            int fallbackMinBarY
+    ) {
+        int fontHeight = client.textRenderer.fontHeight;
+        int anchorTop = textAnchorTop == Integer.MAX_VALUE ? fallbackMinBarY : textAnchorTop;
+        int anchorBottom = textAnchorBottom == Integer.MIN_VALUE ? fallbackMinBarY : textAnchorBottom;
+        int y;
+
+        if (anchorTop == Integer.MAX_VALUE) {
+            y = TOP_ANCHOR_Y + config.textYOffset;
+        } else if (config.verticalAnchorMode == 0) {
+            y = anchorTop - fontHeight - config.textGap + config.textYOffset;
+        } else {
+            y = anchorBottom + config.textGap + config.textYOffset;
         }
-        return (screenWidth - textWidth) / 2;
+
+        return MathHelper.clamp(y, 2, Math.max(2, screenHeight - fontHeight - 2));
     }
 
     private int getSplitTopY(BetterHealthConfig config, int screenHeight, int lineHeight) {
@@ -441,7 +482,9 @@ public class MixinInGameHud {
             
             float progress = 1.0f - (num.life / (float) num.maxLife);
             int offsetY = (int) (progress * 30) * (flowDown ? 1 : -1);
-            float offsetX = (float) Math.sin(progress * Math.PI * 2) * 15 * horizontalFlowDirection;
+            float offsetX = (float) Math.sin(progress * Math.PI * 2)
+                    * BetterHealthConfig.getInstance().floatingNumbersSway
+                    * horizontalFlowDirection;
             
             int textWidth = client.textRenderer.getWidth(num.text);
             int x = num.baseX - textWidth / 2 + (int) offsetX;

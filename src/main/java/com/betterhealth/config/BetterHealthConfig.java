@@ -28,6 +28,7 @@ public class BetterHealthConfig {
     public boolean fullBarMode = true;
     public int barHeight = 5;
     public int barYOffset = 0;
+    public int barSpacing = 1;
     public int hungerBarHeight = 2;
     public int saturationBarHeight = 2;
     public boolean splitBarsInHalfMode = false;
@@ -43,6 +44,8 @@ public class BetterHealthConfig {
     public boolean showHealthAsHearts = true;
     public boolean showPrecision = false;
     public int precisionDigits = 1;
+    public int textGap = 4;
+    public int textYOffset = 0;
     
     public boolean showHunger = false;
     public boolean showHungerBar = true;
@@ -52,6 +55,7 @@ public class BetterHealthConfig {
     public boolean showFloatingNumbers = true;
     public int floatingNumbersDuration = 60;
     public boolean floatingNumbersFlowDown = false;
+    public int floatingNumbersSway = 15;
     
     public int healthBarColor = 0xCC1E9E1E;
     public int spentHealthColor = 0xCC1A1A1A;
@@ -95,6 +99,7 @@ public class BetterHealthConfig {
         this.fullBarMode = loaded.fullBarMode;
         this.barHeight = loaded.barHeight;
         this.barYOffset = loaded.barYOffset;
+        this.barSpacing = loaded.barSpacing;
         this.hungerBarHeight = loaded.hungerBarHeight;
         this.saturationBarHeight = loaded.saturationBarHeight;
         this.splitBarsInHalfMode = loaded.splitBarsInHalfMode;
@@ -109,6 +114,8 @@ public class BetterHealthConfig {
         this.showHealthAsHearts = loaded.showHealthAsHearts;
         this.showPrecision = loaded.showPrecision;
         this.precisionDigits = loaded.precisionDigits;
+        this.textGap = loaded.textGap;
+        this.textYOffset = loaded.textYOffset;
         this.showHunger = loaded.showHunger;
         this.showHungerBar = loaded.showHungerBar;
         this.showSaturationBar = loaded.showSaturationBar;
@@ -116,6 +123,7 @@ public class BetterHealthConfig {
         this.showFloatingNumbers = loaded.showFloatingNumbers;
         this.floatingNumbersDuration = loaded.floatingNumbersDuration;
         this.floatingNumbersFlowDown = loaded.floatingNumbersFlowDown;
+        this.floatingNumbersSway = loaded.floatingNumbersSway;
         this.healthBarColor = loaded.healthBarColor;
         this.spentHealthColor = loaded.spentHealthColor;
         this.absorptionColor = loaded.absorptionColor;
@@ -128,6 +136,7 @@ public class BetterHealthConfig {
 
     private void clampValues() {
         this.barHeight = Math.max(2, this.barHeight);
+        this.barSpacing = Math.max(0, Math.min(8, this.barSpacing));
         this.hungerBarHeight = Math.max(0, this.hungerBarHeight);
         this.saturationBarHeight = Math.max(0, this.saturationBarHeight);
         this.halfModeHealthPercent = Math.max(10, Math.min(90, this.halfModeHealthPercent));
@@ -136,7 +145,10 @@ public class BetterHealthConfig {
         this.verticalAnchorMode = Math.max(0, Math.min(3, this.verticalAnchorMode));
         this.healthFillDirection = Math.max(0, Math.min(1, this.healthFillDirection));
         this.precisionDigits = Math.max(1, Math.min(3, this.precisionDigits));
+        this.textGap = Math.max(0, Math.min(24, this.textGap));
+        this.textYOffset = Math.max(-40, Math.min(40, this.textYOffset));
         this.floatingNumbersDuration = Math.max(20, Math.min(120, this.floatingNumbersDuration));
+        this.floatingNumbersSway = Math.max(0, Math.min(40, this.floatingNumbersSway));
         this.historicalMaxMinutes = Math.max(1, Math.min(30, this.historicalMaxMinutes));
     }
 }
