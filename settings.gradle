@@ -8,9 +8,4 @@ pluginManagement {
     }
 }
 
-plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
-    id 'maven-publish'
-}
-
 rootProject.name = 'better-health'

@@ -16,7 +16,7 @@ public abstract class HealthBarMixin {
     @Inject(method = "renderStatusBars", at = @At("HEAD"), cancellable = true)
     private void betterhealth$renderHealthBar(DrawContext context, CallbackInfo ci) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client.options.hudHidden || client.gameMode == null) {
+        if (client.options.hudHidden) {
             return;
         }
 
