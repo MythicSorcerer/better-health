@@ -29,7 +29,7 @@ public abstract class MixinInGameHud {
         float maxHealth = player.getMaxHealth();
 
         if (maxHealth > MAX_HEARTS_THRESHOLD * 2.0f) {
-            renderXpBarHealth(context, client, currentHealth, maxHealth);
+            this.renderXpBarHealth(context, client, currentHealth, maxHealth);
             ci.cancel();
         }
     }
