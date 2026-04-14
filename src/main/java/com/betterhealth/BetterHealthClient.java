@@ -28,6 +28,9 @@ public class BetterHealthClient implements ClientModInitializer {
     
     public static void handleKeybinds(MinecraftClient client) {
         while (openConfigKey.wasPressed()) {
+            if (client.currentScreen != null) {
+                continue;
+            }
             client.setScreen(BetterHealthConfigScreen.createScreen(client.currentScreen));
         }
     }
