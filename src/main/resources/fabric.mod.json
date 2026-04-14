@@ -1,0 +1,19 @@
+{
+    "schemaVersion": 1,
+    "id": "better-health",
+    "version": "${version}",
+    "name": "Better Health Bar",
+    "description": "Displays health as a progress bar when exceeding 30 hearts",
+    "authors": ["BetterHealth"],
+    "contact": {},
+    "license": "MIT",
+    "environment": "client",
+    "entrypoints": {
+        "client": ["com.betterhealth.BetterHealthClient"]
+    },
+    "mixins": ["better-health.mixins"],
+    "depends": {
+        "fabricloader": ">=0.18.3",
+        "minecraft": "1.21.1"
+    }
+}
