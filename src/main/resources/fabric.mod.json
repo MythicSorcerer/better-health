@@ -14,6 +14,6 @@
     "mixins": ["better-health.mixins"],
     "depends": {
         "fabricloader": ">=0.18.3",
-        "minecraft": "1.21.1"
+        "minecraft": "1.21.11"
     }
 }
