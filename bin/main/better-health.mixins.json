@@ -1,9 +1,0 @@
-{
-	"required": true,
-	"package": "com.betterhealth.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"client": ["MixinInGameHud", "MixinMinecraftClient"],
-	"injectors": {
-		"defaultRequire": 1
-	}
-}
