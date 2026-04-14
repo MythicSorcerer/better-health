@@ -1,6 +1,7 @@
 {
-    "required": true,
-    "package": "com.betterhealth.mixin",
-    "compatibilityLevel": "JAVA_21",
-    "client": ["MixinInGameHud"]
+  "required": true,
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "com.betterhealth.mixin.MixinInGameHud"
+  ]
 }
