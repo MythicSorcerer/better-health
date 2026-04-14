@@ -1,6 +1,8 @@
 package com.betterhealth.mixin;
 
 import com.betterhealth.config.BetterHealthConfig;
+import com.betterhealth.hud.FloatingNumber;
+import com.betterhealth.hud.HistoricalMaxEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -237,9 +239,9 @@ public class MixinInGameHud {
 
         int healthChange = (int) (lastHealth - currentHealth);
         if (healthChange > 0) {
-            floatingNumbers.add(new FloatingNumber("-" + healthChange, healthCenterX, false));
+            floatingNumbers.add(new FloatingNumber("-" + healthChange, healthCenterX, false, BetterHealthConfig.getInstance().floatingNumbersDuration));
         } else if (healthChange < 0) {
-            floatingNumbers.add(new FloatingNumber("+" + (-healthChange), healthCenterX, true));
+            floatingNumbers.add(new FloatingNumber("+" + (-healthChange), healthCenterX, true, BetterHealthConfig.getInstance().floatingNumbersDuration));
         }
 
         lastHealth = (int) currentHealth;
@@ -494,29 +496,4 @@ public class MixinInGameHud {
         }
     }
     
-    private static class FloatingNumber {
-        String text;
-        int baseX;
-        int life;
-        int maxLife;
-        boolean positive;
-        
-        FloatingNumber(String text, int baseX, boolean positive) {
-            this.text = text;
-            this.baseX = baseX;
-            this.positive = positive;
-            this.maxLife = BetterHealthConfig.getInstance().floatingNumbersDuration;
-            this.life = this.maxLife;
-        }
-    }
-    
-    private static class HistoricalMaxEntry {
-        float maxHealth;
-        long timestamp;
-        
-        HistoricalMaxEntry(float maxHealth, long timestamp) {
-            this.maxHealth = maxHealth;
-            this.timestamp = timestamp;
-        }
-    }
 }
