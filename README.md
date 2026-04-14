@@ -1,27 +1,46 @@
 # Better Health Bar
 
-Client-side Fabric mod for Minecraft 1.21.1 that replaces the heart-based health display with an XP-bar style progress bar when player health exceeds 30 hearts.
+Last updated: 2026-04-14 UTC
 
-## Features
-- Displays health as a progress bar (like the XP bar) when max health > 30 hearts
-- Shows current/max health as text overlay (e.g., "200/300")
-- Client-side only - no server-side requirements
+Better Health Bar is a client-side Fabric mod for Minecraft 1.21.11. It replaces the vanilla heart HUD with configurable progress bars once the player's maximum health crosses a configurable threshold.
 
-## Building
+## What It Does
 
-1. Generate the Gradle wrapper:
-```bash
-mkdir -p gradle/wrapper
-# Download gradle-wrapper.jar manually or use an existing gradle installation
-gradle wrapper --gradle-version 8.9
-```
+- Replaces vanilla hearts with a health bar when max health is above the configured threshold
+- Shows current and maximum health as text above the bar
+- Supports optional absorption, hunger, and saturation overlays
+- Includes a Cloth Config screen opened with `B` by default
+- Runs entirely on the client and does not require server installation
 
-2. Build the mod:
+## Supported Environment
+
+- Minecraft `1.21.11`
+- Fabric Loader `0.18.6+`
+- Java `21`
+
+## Build
+
 ```bash
 ./gradlew build
 ```
 
-The compiled JAR will be in `build/libs/`.
+Artifacts are written to `build/libs/`.
 
-## Usage
-Install the mod in your Fabric mod loader's mods folder. The progress bar will automatically appear when you have more than 30 hearts (e.g., via Health Boost effect at high levels).
+## Install
+
+1. Build or download the jar.
+2. Place the jar in your Fabric `mods` folder.
+3. Launch the game and press `B` to open the config screen.
+
+## Project Layout
+
+- `src/main/java/com/betterhealth/BetterHealthClient.java`: client entrypoint and keybinding registration
+- `src/main/java/com/betterhealth/config/BetterHealthConfig.java`: config persistence and defaults
+- `src/main/java/com/betterhealth/config/BetterHealthConfigScreen.java`: Cloth Config UI
+- `src/main/java/com/betterhealth/mixin/MixinInGameHud.java`: custom HUD rendering
+- `src/main/java/com/betterhealth/mixin/MixinMinecraftClient.java`: keybind polling hook
+
+## Additional Docs
+
+- `docs/architecture.md`
+- `docs/configuration.md`

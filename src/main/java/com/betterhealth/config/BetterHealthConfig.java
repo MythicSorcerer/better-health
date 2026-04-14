@@ -69,49 +69,8 @@ public class BetterHealthConfig {
                 String json = Files.readString(CONFIG_PATH);
                 BetterHealthConfig loaded = GSON.fromJson(json, BetterHealthConfig.class);
                 if (loaded != null) {
-                    this.enabled = loaded.enabled;
-                    this.triggerThreshold = loaded.triggerThreshold;
-                    this.fullBarMode = loaded.fullBarMode;
-                    this.barHeight = loaded.barHeight;
-                    this.barYOffset = loaded.barYOffset;
-                    this.hungerBarHeight = loaded.hungerBarHeight;
-                    this.saturationBarHeight = loaded.saturationBarHeight;
-                    this.splitBarsInHalfMode = loaded.splitBarsInHalfMode;
-                    this.halfModeHealthPercent = loaded.halfModeHealthPercent;
-                    this.halfModeGapPercent = loaded.halfModeGapPercent;
-                    this.swapBarsLeftRight = loaded.swapBarsLeftRight;
-                    this.hungerAboveHealth = loaded.hungerAboveHealth;
-                    this.horizontalAlignment = loaded.horizontalAlignment;
-                    this.verticalAnchorMode = loaded.verticalAnchorMode;
-                    this.healthFillDirection = loaded.healthFillDirection;
-                    this.showHeartIcon = loaded.showHeartIcon;
-                    this.showHealthAsHearts = loaded.showHealthAsHearts;
-                    this.showPrecision = loaded.showPrecision;
-                    this.precisionDigits = loaded.precisionDigits;
-                    this.showHunger = loaded.showHunger;
-                    this.showHungerBar = loaded.showHungerBar;
-                    this.showSaturationBar = loaded.showSaturationBar;
-                    this.showDamageFlash = loaded.showDamageFlash;
-                    this.showFloatingNumbers = loaded.showFloatingNumbers;
-                    this.floatingNumbersDuration = loaded.floatingNumbersDuration;
-                    this.floatingNumbersFlowDown = loaded.floatingNumbersFlowDown;
-                    this.healthBarColor = loaded.healthBarColor;
-                    this.spentHealthColor = loaded.spentHealthColor;
-                    this.absorptionColor = loaded.absorptionColor;
-                    this.backgroundColor = loaded.backgroundColor;
-                    this.hungerBarColor = loaded.hungerBarColor;
-                    this.saturationBarColor = loaded.saturationBarColor;
-                    this.trackHistoricalMax = loaded.trackHistoricalMax;
-                    this.historicalMaxMinutes = loaded.historicalMaxMinutes;
-
-                    this.barHeight = Math.max(2, this.barHeight);
-                    this.hungerBarHeight = Math.max(0, this.hungerBarHeight);
-                    this.saturationBarHeight = Math.max(0, this.saturationBarHeight);
-                    this.halfModeHealthPercent = Math.max(10, Math.min(90, this.halfModeHealthPercent));
-                    this.halfModeGapPercent = Math.max(0, Math.min(50, this.halfModeGapPercent));
-                    this.horizontalAlignment = Math.max(0, Math.min(2, this.horizontalAlignment));
-                    this.verticalAnchorMode = Math.max(0, Math.min(3, this.verticalAnchorMode));
-                    this.healthFillDirection = Math.max(0, Math.min(1, this.healthFillDirection));
+                    applyLoadedConfig(loaded);
+                    clampValues();
                 }
             }
         } catch (IOException e) {
@@ -122,10 +81,62 @@ public class BetterHealthConfig {
     
     public void save() {
         try {
+            Files.createDirectories(CONFIG_PATH.getParent());
             String json = GSON.toJson(this);
             Files.writeString(CONFIG_PATH, json);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void applyLoadedConfig(BetterHealthConfig loaded) {
+        this.enabled = loaded.enabled;
+        this.triggerThreshold = loaded.triggerThreshold;
+        this.fullBarMode = loaded.fullBarMode;
+        this.barHeight = loaded.barHeight;
+        this.barYOffset = loaded.barYOffset;
+        this.hungerBarHeight = loaded.hungerBarHeight;
+        this.saturationBarHeight = loaded.saturationBarHeight;
+        this.splitBarsInHalfMode = loaded.splitBarsInHalfMode;
+        this.halfModeHealthPercent = loaded.halfModeHealthPercent;
+        this.halfModeGapPercent = loaded.halfModeGapPercent;
+        this.swapBarsLeftRight = loaded.swapBarsLeftRight;
+        this.hungerAboveHealth = loaded.hungerAboveHealth;
+        this.horizontalAlignment = loaded.horizontalAlignment;
+        this.verticalAnchorMode = loaded.verticalAnchorMode;
+        this.healthFillDirection = loaded.healthFillDirection;
+        this.showHeartIcon = loaded.showHeartIcon;
+        this.showHealthAsHearts = loaded.showHealthAsHearts;
+        this.showPrecision = loaded.showPrecision;
+        this.precisionDigits = loaded.precisionDigits;
+        this.showHunger = loaded.showHunger;
+        this.showHungerBar = loaded.showHungerBar;
+        this.showSaturationBar = loaded.showSaturationBar;
+        this.showDamageFlash = loaded.showDamageFlash;
+        this.showFloatingNumbers = loaded.showFloatingNumbers;
+        this.floatingNumbersDuration = loaded.floatingNumbersDuration;
+        this.floatingNumbersFlowDown = loaded.floatingNumbersFlowDown;
+        this.healthBarColor = loaded.healthBarColor;
+        this.spentHealthColor = loaded.spentHealthColor;
+        this.absorptionColor = loaded.absorptionColor;
+        this.backgroundColor = loaded.backgroundColor;
+        this.hungerBarColor = loaded.hungerBarColor;
+        this.saturationBarColor = loaded.saturationBarColor;
+        this.trackHistoricalMax = loaded.trackHistoricalMax;
+        this.historicalMaxMinutes = loaded.historicalMaxMinutes;
+    }
+
+    private void clampValues() {
+        this.barHeight = Math.max(2, this.barHeight);
+        this.hungerBarHeight = Math.max(0, this.hungerBarHeight);
+        this.saturationBarHeight = Math.max(0, this.saturationBarHeight);
+        this.halfModeHealthPercent = Math.max(10, Math.min(90, this.halfModeHealthPercent));
+        this.halfModeGapPercent = Math.max(0, Math.min(50, this.halfModeGapPercent));
+        this.horizontalAlignment = Math.max(0, Math.min(2, this.horizontalAlignment));
+        this.verticalAnchorMode = Math.max(0, Math.min(3, this.verticalAnchorMode));
+        this.healthFillDirection = Math.max(0, Math.min(1, this.healthFillDirection));
+        this.precisionDigits = Math.max(1, Math.min(3, this.precisionDigits));
+        this.floatingNumbersDuration = Math.max(20, Math.min(120, this.floatingNumbersDuration));
+        this.historicalMaxMinutes = Math.max(1, Math.min(30, this.historicalMaxMinutes));
     }
 }

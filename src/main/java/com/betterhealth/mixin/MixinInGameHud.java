@@ -19,6 +19,8 @@ import java.util.List;
 public class MixinInGameHud {
     private static final int HUD_MARGIN = 8;
     private static final int TOP_ANCHOR_Y = 18;
+    private static final int FULL_BAR_WIDTH = 182;
+    private static final int HALF_BAR_WIDTH = 81;
     private static final List<FloatingNumber> floatingNumbers = new ArrayList<>();
     private static final List<HistoricalMaxEntry> historicalMax = new ArrayList<>();
     private static int lastHealth = 0;
@@ -38,9 +40,7 @@ public class MixinInGameHud {
         }
 
         float maxHealth = client.player.getMaxHealth();
-        int threshold = config.triggerThreshold * 2;
-
-        if (config.triggerThreshold == 0 || maxHealth > threshold) {
+        if (shouldUseCustomHud(config, maxHealth)) {
             ci.cancel();
 
             int screenWidth = client.getWindow().getScaledWidth();
@@ -56,7 +56,7 @@ public class MixinInGameHud {
                 displayMax = getHistoricalMax(maxHealth, config.historicalMaxMinutes);
             }
 
-            int barWidth = config.fullBarMode ? 182 : 81;
+            int barWidth = config.fullBarMode ? FULL_BAR_WIDTH : HALF_BAR_WIDTH;
             int x = getAlignedX(config, screenWidth, barWidth);
 
             int barSpacing = 1;
@@ -176,18 +176,7 @@ public class MixinInGameHud {
                 }
             }
 
-            String healthText = formatHealth(currentHealth, config) + "/" + formatHealth(maxHealth, config);
-            if (absorption > 0) {
-                healthText += " +" + formatHealth(absorption, config);
-            }
-            
-            if (config.showHeartIcon) {
-                healthText = "\u2665 " + healthText;
-            }
-            
-            if (config.showHunger) {
-                healthText += " \u00a7f\u2665" + hunger;
-            }
+            String healthText = getHealthText(config, currentHealth, maxHealth, absorption, hunger);
 
             int textX = getTextX(config, client, screenWidth, x, barWidth, healthText);
             int textY = Math.max(2, minBarY - 10);
@@ -201,24 +190,44 @@ public class MixinInGameHud {
             }
 
             if (config.showFloatingNumbers) {
-                if (lastHealth == 0) {
-                    lastHealth = (int) currentHealth;
-                }
-
-                int healthChange = (int) (lastHealth - currentHealth);
-
-                if (healthChange > 0) {
-                    floatingNumbers.add(new FloatingNumber("-" + healthChange, healthCenterX, false));
-                } else if (healthChange < 0) {
-                    floatingNumbers.add(new FloatingNumber("+" + (-healthChange), healthCenterX, true));
-                }
-
-                lastHealth = (int) currentHealth;
-
+                updateFloatingNumbers(currentHealth, healthCenterX);
                 int flowDirection = healthCenterX >= (screenWidth / 2) ? -1 : 1;
                 renderFloatingNumbers(context, client, maxBarY + 1, flowDirection, config.floatingNumbersFlowDown);
             }
         }
+    }
+
+    private boolean shouldUseCustomHud(BetterHealthConfig config, float maxHealth) {
+        return config.triggerThreshold == 0 || maxHealth > (config.triggerThreshold * 2);
+    }
+
+    private String getHealthText(BetterHealthConfig config, float currentHealth, float maxHealth, float absorption, int hunger) {
+        String healthText = formatHealth(currentHealth, config) + "/" + formatHealth(maxHealth, config);
+        if (absorption > 0) {
+            healthText += " +" + formatHealth(absorption, config);
+        }
+        if (config.showHeartIcon) {
+            healthText = "\u2665 " + healthText;
+        }
+        if (config.showHunger) {
+            healthText += " \u00a7f\u2665" + hunger;
+        }
+        return healthText;
+    }
+
+    private void updateFloatingNumbers(float currentHealth, int healthCenterX) {
+        if (lastHealth == 0) {
+            lastHealth = (int) currentHealth;
+        }
+
+        int healthChange = (int) (lastHealth - currentHealth);
+        if (healthChange > 0) {
+            floatingNumbers.add(new FloatingNumber("-" + healthChange, healthCenterX, false));
+        } else if (healthChange < 0) {
+            floatingNumbers.add(new FloatingNumber("+" + (-healthChange), healthCenterX, true));
+        }
+
+        lastHealth = (int) currentHealth;
     }
 
     private int getAlignedX(BetterHealthConfig config, int screenWidth, int barWidth) {
