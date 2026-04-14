@@ -11,7 +11,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class BetterHealthClient implements ClientModInitializer {
     private static final String CONFIG_KEY_TRANSLATION = "key.better-health.config";
-    private static final int DEFAULT_CONFIG_KEY = GLFW.GLFW_KEY_B;
+    private static final int DEFAULT_CONFIG_KEY = GLFW.GLFW_KEY_N;
     private static KeyBinding openConfigKey;
     
     @Override
@@ -22,7 +22,7 @@ public class BetterHealthClient implements ClientModInitializer {
                 CONFIG_KEY_TRANSLATION,
                 InputUtil.Type.KEYSYM,
                 DEFAULT_CONFIG_KEY,
-                null
+                KeyBinding.Category.MISC
         ));
     }
     
