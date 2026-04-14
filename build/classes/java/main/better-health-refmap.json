@@ -1,12 +1,12 @@
 {
   "mappings": {
-    "com/betterhealth/mixin/HealthBarMixin": {
+    "com/betterhealth/mixin/MixinInGameHud": {
       "renderStatusBars": "Lnet/minecraft/class_329;method_1760(Lnet/minecraft/class_332;)V"
     }
   },
   "data": {
     "named:intermediary": {
-      "com/betterhealth/mixin/HealthBarMixin": {
+      "com/betterhealth/mixin/MixinInGameHud": {
         "renderStatusBars": "Lnet/minecraft/class_329;method_1760(Lnet/minecraft/class_332;)V"
       }
     }
