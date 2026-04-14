@@ -5,6 +5,5 @@
     "client": ["HealthBarMixin"],
     "injectors": {
         "defaultRequire": 1
-    },
-    "refmap": "better-health-refmap.json"
+    }
 }
