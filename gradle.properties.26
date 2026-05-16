@@ -1,0 +1,15 @@
+# 26.x Configuration - Requires Java 25
+# Fabric Properties
+minecraft_version=26.1.2
+loader_version=0.19.2
+loom_version=1.16-SNAPSHOT
+
+# Mod Properties
+mod_version=1.0.8
+maven_group=com.betterhealth
+
+# Dependencies
+fabric_api_version=0.148.2+26.1.2
+
+# Java version for 26.x
+# Requires Java 25 (not Java 21)
