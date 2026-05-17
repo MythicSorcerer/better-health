@@ -1,8 +1,8 @@
 {
 	"required": true,
 	"package": "com.betterhealth.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"client": ["MixinInGameHud", "MixinMinecraftClient"],
+	"compatibilityLevel": "JAVA_25",
+	"client": ["MixinGui", "MixinMinecraftClient"],
 	"injectors": {
 		"defaultRequire": 1
 	}

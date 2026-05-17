@@ -5,8 +5,8 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
 public class BetterHealthConfigScreen {
@@ -16,261 +16,261 @@ public class BetterHealthConfigScreen {
         
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)
-                .setTitle(Text.literal("Better Health"))
+                .setTitle(Component.literal("Better Health"))
                 .setSavingRunnable(config::save);
         
-        ConfigCategory general = builder.getOrCreateCategory(Text.literal("General"));
-        ConfigCategory display = builder.getOrCreateCategory(Text.literal("Display"));
-        ConfigCategory bars = builder.getOrCreateCategory(Text.literal("Bar Settings"));
-        ConfigCategory hunger = builder.getOrCreateCategory(Text.literal("Hunger Bar"));
-        ConfigCategory colors = builder.getOrCreateCategory(Text.literal("Colors"));
-        ConfigCategory tuning = builder.getOrCreateCategory(Text.literal("Tuning"));
-        ConfigCategory advanced = builder.getOrCreateCategory(Text.literal("Advanced"));
+        ConfigCategory general = builder.getOrCreateCategory(Component.literal("General"));
+        ConfigCategory display = builder.getOrCreateCategory(Component.literal("Display"));
+        ConfigCategory bars = builder.getOrCreateCategory(Component.literal("Bar Settings"));
+        ConfigCategory hunger = builder.getOrCreateCategory(Component.literal("Hunger Bar"));
+        ConfigCategory colors = builder.getOrCreateCategory(Component.literal("Colors"));
+        ConfigCategory tuning = builder.getOrCreateCategory(Component.literal("Tuning"));
+        ConfigCategory advanced = builder.getOrCreateCategory(Component.literal("Advanced"));
         
         ConfigEntryBuilder entryBuilder = ConfigEntryBuilder.create();
         
-        general.addEntry(entryBuilder.startBooleanToggle(Text.literal("Enabled"), config.enabled)
+        general.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), config.enabled)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Enable or disable the custom health bar"))
+                .setTooltip(Component.literal("Enable or disable the custom health bar"))
                 .setSaveConsumer(value -> config.enabled = value)
                 .build());
         
-        general.addEntry(entryBuilder.startIntSlider(Text.literal("Trigger Threshold (Hearts)"), config.triggerThreshold, 0, 100)
+        general.addEntry(entryBuilder.startIntSlider(Component.literal("Trigger Threshold (Hearts)"), config.triggerThreshold, 0, 100)
                 .setDefaultValue(30)
-                .setTooltip(Text.literal("Show custom bar when max health exceeds this many hearts"))
+                .setTooltip(Component.literal("Show custom bar when max health exceeds this many hearts"))
                 .setTextGetter(value -> value == 0
-                        ? Text.literal("Always")
-                        : Text.literal(value + " hearts"))
+                        ? Component.literal("Always")
+                        : Component.literal(value + " hearts"))
                 .setSaveConsumer(value -> config.triggerThreshold = value)
                 .build());
         
-        display.addEntry(entryBuilder.startBooleanToggle(Text.literal("Show Heart Icon"), config.showHeartIcon)
+        display.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show Heart Icon"), config.showHeartIcon)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Show heart icon at start of health text"))
+                .setTooltip(Component.literal("Show heart icon at start of health text"))
                 .setSaveConsumer(value -> config.showHeartIcon = value)
                 .build());
         
-        display.addEntry(entryBuilder.startBooleanToggle(Text.literal("Show Health as Hearts"), config.showHealthAsHearts)
+        display.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show Health as Hearts"), config.showHealthAsHearts)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Show health in hearts (0.5) instead of HP (1)"))
+                .setTooltip(Component.literal("Show health in hearts (0.5) instead of HP (1)"))
                 .setSaveConsumer(value -> config.showHealthAsHearts = value)
                 .build());
         
-        display.addEntry(entryBuilder.startBooleanToggle(Text.literal("Show Decimal Precision"), config.showPrecision)
+        display.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show Decimal Precision"), config.showPrecision)
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("Show decimal precision (34.5 instead of 34)"))
+                .setTooltip(Component.literal("Show decimal precision (34.5 instead of 34)"))
                 .setSaveConsumer(value -> config.showPrecision = value)
                 .build());
         
-        display.addEntry(entryBuilder.startIntSlider(Text.literal("Precision Digits"), config.precisionDigits, 1, 3)
+        display.addEntry(entryBuilder.startIntSlider(Component.literal("Precision Digits"), config.precisionDigits, 1, 3)
                 .setDefaultValue(1)
-                .setTooltip(Text.literal("Number of decimal places to show"))
+                .setTooltip(Component.literal("Number of decimal places to show"))
                 .setSaveConsumer(value -> config.precisionDigits = value)
                 .build());
 
-        tuning.addEntry(entryBuilder.startIntSlider(Text.literal("Text Gap"), config.textGap, 0, 24)
+        tuning.addEntry(entryBuilder.startIntSlider(Component.literal("Text Gap"), config.textGap, 0, 24)
                 .setDefaultValue(4)
-                .setTooltip(Text.literal("Padding between the health text and the nearest bar block"))
+                .setTooltip(Component.literal("Padding between the health text and the nearest bar block"))
                 .setSaveConsumer(value -> config.textGap = value)
                 .build());
 
-        tuning.addEntry(entryBuilder.startIntSlider(Text.literal("Text Y Offset"), config.textYOffset, -40, 40)
+        tuning.addEntry(entryBuilder.startIntSlider(Component.literal("Text Y Offset"), config.textYOffset, -40, 40)
                 .setDefaultValue(0)
-                .setTooltip(Text.literal("Moves the health text up or down for visual calibration"))
+                .setTooltip(Component.literal("Moves the health text up or down for visual calibration"))
                 .setSaveConsumer(value -> config.textYOffset = value)
                 .build());
         
-        bars.addEntry(entryBuilder.startBooleanToggle(Text.literal("Full Bar Mode"), config.fullBarMode)
+        bars.addEntry(entryBuilder.startBooleanToggle(Component.literal("Full Bar Mode"), config.fullBarMode)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Full: Match hotbar width | Half: 10 hearts wide"))
+                .setTooltip(Component.literal("Full: Match hotbar width | Half: 10 hearts wide"))
                 .setSaveConsumer(value -> config.fullBarMode = value)
                 .build());
 
-        bars.addEntry(entryBuilder.startBooleanToggle(Text.literal("Split Bars In Half Mode"), config.splitBarsInHalfMode)
+        bars.addEntry(entryBuilder.startBooleanToggle(Component.literal("Split Bars In Half Mode"), config.splitBarsInHalfMode)
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("In half mode, split one row into health segment + gap + hunger segment"))
+                .setTooltip(Component.literal("In half mode, split one row into health segment + gap + hunger segment"))
                 .setSaveConsumer(value -> config.splitBarsInHalfMode = value)
                 .build());
         
-        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Health Bar Height"), config.barHeight, 2, 20)
+        bars.addEntry(entryBuilder.startIntSlider(Component.literal("Health Bar Height"), config.barHeight, 2, 20)
                 .setDefaultValue(5)
-                .setTooltip(Text.literal("Height of the main health bar"))
+                .setTooltip(Component.literal("Height of the main health bar"))
                 .setSaveConsumer(value -> config.barHeight = value)
                 .build());
 
-        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Bar Y Offset"), config.barYOffset, -80, 80)
+        bars.addEntry(entryBuilder.startIntSlider(Component.literal("Bar Y Offset"), config.barYOffset, -80, 80)
                 .setDefaultValue(0)
-                .setTooltip(Text.literal("Moves bars up/down for quick visual tuning"))
+                .setTooltip(Component.literal("Moves bars up/down for quick visual tuning"))
                 .setSaveConsumer(value -> config.barYOffset = value)
                 .build());
 
-        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Row Spacing"), config.barSpacing, 0, 8)
+        bars.addEntry(entryBuilder.startIntSlider(Component.literal("Row Spacing"), config.barSpacing, 0, 8)
                 .setDefaultValue(1)
-                .setTooltip(Text.literal("Spacing between stacked saturation, hunger, and health rows"))
+                .setTooltip(Component.literal("Spacing between stacked saturation, hunger, and health rows"))
                 .setSaveConsumer(value -> config.barSpacing = value)
                 .build());
         
-        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Hunger Bar Height"), config.hungerBarHeight, 0, 10)
+        bars.addEntry(entryBuilder.startIntSlider(Component.literal("Hunger Bar Height"), config.hungerBarHeight, 0, 10)
                 .setDefaultValue(2)
-                .setTooltip(Text.literal("Height of the hunger bar (0 to disable)"))
+                .setTooltip(Component.literal("Height of the hunger bar (0 to disable)"))
                 .setSaveConsumer(value -> config.hungerBarHeight = value)
                 .build());
         
-        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Saturation Bar Height"), config.saturationBarHeight, 0, 10)
+        bars.addEntry(entryBuilder.startIntSlider(Component.literal("Saturation Bar Height"), config.saturationBarHeight, 0, 10)
                 .setDefaultValue(2)
-                .setTooltip(Text.literal("Height of the saturation bar (0 to disable)"))
+                .setTooltip(Component.literal("Height of the saturation bar (0 to disable)"))
                 .setSaveConsumer(value -> config.saturationBarHeight = value)
                 .build());
 
-        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Half Mode Health %"), config.halfModeHealthPercent, 10, 90)
+        bars.addEntry(entryBuilder.startIntSlider(Component.literal("Half Mode Health %"), config.halfModeHealthPercent, 10, 90)
                 .setDefaultValue(65)
-                .setTooltip(Text.literal("Width percentage reserved for health segment in split half mode"))
-                .setTextGetter(value -> Text.literal(value + "%"))
+                .setTooltip(Component.literal("Width percentage reserved for health segment in split half mode"))
+                .setTextGetter(value -> Component.literal(value + "%"))
                 .setSaveConsumer(value -> config.halfModeHealthPercent = value)
                 .build());
 
-        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Half Mode Gap %"), config.halfModeGapPercent, 0, 50)
+        bars.addEntry(entryBuilder.startIntSlider(Component.literal("Half Mode Gap %"), config.halfModeGapPercent, 0, 50)
                 .setDefaultValue(8)
-                .setTooltip(Text.literal("Percentage of total width used as center gap in split half mode"))
-                .setTextGetter(value -> Text.literal(value + "%"))
+                .setTooltip(Component.literal("Percentage of total width used as center gap in split half mode"))
+                .setTextGetter(value -> Component.literal(value + "%"))
                 .setSaveConsumer(value -> config.halfModeGapPercent = value)
                 .build());
 
-        bars.addEntry(entryBuilder.startBooleanToggle(Text.literal("Swap Left/Right Segments"), config.swapBarsLeftRight)
+        bars.addEntry(entryBuilder.startBooleanToggle(Component.literal("Swap Left/Right Segments"), config.swapBarsLeftRight)
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("Swap health and hunger segment positions in split half mode"))
+                .setTooltip(Component.literal("Swap health and hunger segment positions in split half mode"))
                 .setSaveConsumer(value -> config.swapBarsLeftRight = value)
                 .build());
 
-        bars.addEntry(entryBuilder.startBooleanToggle(Text.literal("Hunger Above Health"), config.hungerAboveHealth)
+        bars.addEntry(entryBuilder.startBooleanToggle(Component.literal("Hunger Above Health"), config.hungerAboveHealth)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("When stacked, place hunger/saturation above health"))
+                .setTooltip(Component.literal("When stacked, place hunger/saturation above health"))
                 .setSaveConsumer(value -> config.hungerAboveHealth = value)
                 .build());
 
-        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Horizontal Alignment"), config.horizontalAlignment, 0, 2)
+        bars.addEntry(entryBuilder.startIntSlider(Component.literal("Horizontal Alignment"), config.horizontalAlignment, 0, 2)
                 .setDefaultValue(1)
-                .setTooltip(Text.literal("Align bars to left, center, or right"))
+                .setTooltip(Component.literal("Align bars to left, center, or right"))
                 .setTextGetter(value -> switch (value) {
-                    case 0 -> Text.literal("Left");
-                    case 2 -> Text.literal("Right");
-                    default -> Text.literal("Center");
+                    case 0 -> Component.literal("Left");
+                    case 2 -> Component.literal("Right");
+                    default -> Component.literal("Center");
                 })
                 .setSaveConsumer(value -> config.horizontalAlignment = value)
                 .build());
 
-        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Vertical Anchor"), config.verticalAnchorMode, 0, 3)
+        bars.addEntry(entryBuilder.startIntSlider(Component.literal("Vertical Anchor"), config.verticalAnchorMode, 0, 3)
                 .setDefaultValue(0)
-                .setTooltip(Text.literal("Bottom, top, top health only, or top hunger only"))
+                .setTooltip(Component.literal("Bottom, top, top health only, or top hunger only"))
                 .setTextGetter(value -> switch (value) {
-                    case 1 -> Text.literal("Top (Both)");
-                    case 2 -> Text.literal("Top Health Only");
-                    case 3 -> Text.literal("Top Hunger Only");
-                    default -> Text.literal("Bottom (Both)");
+                    case 1 -> Component.literal("Top (Both)");
+                    case 2 -> Component.literal("Top Health Only");
+                    case 3 -> Component.literal("Top Hunger Only");
+                    default -> Component.literal("Bottom (Both)");
                 })
                 .setSaveConsumer(value -> config.verticalAnchorMode = value)
                 .build());
 
-        bars.addEntry(entryBuilder.startIntSlider(Text.literal("Health Fill Direction"), config.healthFillDirection, 0, 1)
+        bars.addEntry(entryBuilder.startIntSlider(Component.literal("Health Fill Direction"), config.healthFillDirection, 0, 1)
                 .setDefaultValue(0)
-                .setTooltip(Text.literal("Choose which side health fills from"))
-                .setTextGetter(value -> value == 0 ? Text.literal("Left to Right") : Text.literal("Right to Left"))
+                .setTooltip(Component.literal("Choose which side health fills from"))
+                .setTextGetter(value -> value == 0 ? Component.literal("Left to Right") : Component.literal("Right to Left"))
                 .setSaveConsumer(value -> config.healthFillDirection = value)
                 .build());
         
-        hunger.addEntry(entryBuilder.startBooleanToggle(Text.literal("Show Hunger Text"), config.showHunger)
+        hunger.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show Hunger Text"), config.showHunger)
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("Show hunger number next to health"))
+                .setTooltip(Component.literal("Show hunger number next to health"))
                 .setSaveConsumer(value -> config.showHunger = value)
                 .build());
         
-        hunger.addEntry(entryBuilder.startBooleanToggle(Text.literal("Show Hunger Bar"), config.showHungerBar)
+        hunger.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show Hunger Bar"), config.showHungerBar)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Show hunger bar above health bar"))
+                .setTooltip(Component.literal("Show hunger bar above health bar"))
                 .setSaveConsumer(value -> config.showHungerBar = value)
                 .build());
         
-        hunger.addEntry(entryBuilder.startBooleanToggle(Text.literal("Show Saturation Bar"), config.showSaturationBar)
+        hunger.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show Saturation Bar"), config.showSaturationBar)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Show saturation bar above hunger bar"))
+                .setTooltip(Component.literal("Show saturation bar above hunger bar"))
                 .setSaveConsumer(value -> config.showSaturationBar = value)
                 .build());
         
-        colors.addEntry(entryBuilder.startColorField(Text.literal("Health Color"), config.healthBarColor & 0x00FFFFFF)
+        colors.addEntry(entryBuilder.startColorField(Component.literal("Health Color"), config.healthBarColor & 0x00FFFFFF)
                 .setDefaultValue(0xCC1E9E1E & 0x00FFFFFF)
-                .setTooltip(Text.literal("Color of the current health portion"))
+                .setTooltip(Component.literal("Color of the current health portion"))
                 .setSaveConsumer(value -> config.healthBarColor = 0xCC000000 | value)
                 .build());
         
-        colors.addEntry(entryBuilder.startColorField(Text.literal("Spent Health Color"), config.spentHealthColor & 0x00FFFFFF)
+        colors.addEntry(entryBuilder.startColorField(Component.literal("Spent Health Color"), config.spentHealthColor & 0x00FFFFFF)
                 .setDefaultValue(0xCC1A1A1A & 0x00FFFFFF)
-                .setTooltip(Text.literal("Color of the lost health portion"))
+                .setTooltip(Component.literal("Color of the lost health portion"))
                 .setSaveConsumer(value -> config.spentHealthColor = 0xCC000000 | value)
                 .build());
         
-        colors.addEntry(entryBuilder.startColorField(Text.literal("Absorption Color"), config.absorptionColor & 0x00FFFFFF)
+        colors.addEntry(entryBuilder.startColorField(Component.literal("Absorption Color"), config.absorptionColor & 0x00FFFFFF)
                 .setDefaultValue(0xCCFFAA00 & 0x00FFFFFF)
-                .setTooltip(Text.literal("Color of absorption health (yellow)"))
+                .setTooltip(Component.literal("Color of absorption health (yellow)"))
                 .setSaveConsumer(value -> config.absorptionColor = 0xCC000000 | value)
                 .build());
         
-        colors.addEntry(entryBuilder.startColorField(Text.literal("Hunger Bar Color"), config.hungerBarColor & 0x00FFFFFF)
+        colors.addEntry(entryBuilder.startColorField(Component.literal("Hunger Bar Color"), config.hungerBarColor & 0x00FFFFFF)
                 .setDefaultValue(0xCCCC4400 & 0x00FFFFFF)
-                .setTooltip(Text.literal("Color of the hunger bar"))
+                .setTooltip(Component.literal("Color of the hunger bar"))
                 .setSaveConsumer(value -> config.hungerBarColor = 0xCC000000 | value)
                 .build());
         
-        colors.addEntry(entryBuilder.startColorField(Text.literal("Saturation Bar Color"), config.saturationBarColor & 0x00FFFFFF)
+        colors.addEntry(entryBuilder.startColorField(Component.literal("Saturation Bar Color"), config.saturationBarColor & 0x00FFFFFF)
                 .setDefaultValue(0xCCDD7700 & 0x00FFFFFF)
-                .setTooltip(Text.literal("Color of the saturation bar"))
+                .setTooltip(Component.literal("Color of the saturation bar"))
                 .setSaveConsumer(value -> config.saturationBarColor = 0xCC000000 | value)
                 .build());
         
-        colors.addEntry(entryBuilder.startColorField(Text.literal("Background Color"), config.backgroundColor & 0x00FFFFFF)
+        colors.addEntry(entryBuilder.startColorField(Component.literal("Background Color"), config.backgroundColor & 0x00FFFFFF)
                 .setDefaultValue(0xC0000000 & 0x00FFFFFF)
-                .setTooltip(Text.literal("Background color of the bars"))
+                .setTooltip(Component.literal("Background color of the bars"))
                 .setSaveConsumer(value -> config.backgroundColor = 0xC0000000 | value)
                 .build());
         
-        advanced.addEntry(entryBuilder.startBooleanToggle(Text.literal("Show Damage Flash"), config.showDamageFlash)
+        advanced.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show Damage Flash"), config.showDamageFlash)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Show flashing effect when taking damage"))
+                .setTooltip(Component.literal("Show flashing effect when taking damage"))
                 .setSaveConsumer(value -> config.showDamageFlash = value)
                 .build());
         
-        advanced.addEntry(entryBuilder.startBooleanToggle(Text.literal("Show Floating Numbers"), config.showFloatingNumbers)
+        advanced.addEntry(entryBuilder.startBooleanToggle(Component.literal("Show Floating Numbers"), config.showFloatingNumbers)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Show damage/healing numbers floating up"))
+                .setTooltip(Component.literal("Show damage/healing numbers floating up"))
                 .setSaveConsumer(value -> config.showFloatingNumbers = value)
                 .build());
         
-        advanced.addEntry(entryBuilder.startIntSlider(Text.literal("Floating Numbers Duration"), config.floatingNumbersDuration, 20, 120)
+        advanced.addEntry(entryBuilder.startIntSlider(Component.literal("Floating Numbers Duration"), config.floatingNumbersDuration, 20, 120)
                 .setDefaultValue(60)
-                .setTooltip(Text.literal("How long floating numbers stay visible (ticks)"))
+                .setTooltip(Component.literal("How long floating numbers stay visible (ticks)"))
                 .setSaveConsumer(value -> config.floatingNumbersDuration = value)
                 .build());
 
-        advanced.addEntry(entryBuilder.startBooleanToggle(Text.literal("Floating Numbers Flow Down"), config.floatingNumbersFlowDown)
+        advanced.addEntry(entryBuilder.startBooleanToggle(Component.literal("Floating Numbers Flow Down"), config.floatingNumbersFlowDown)
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("When enabled, floating numbers move downward instead of upward"))
+                .setTooltip(Component.literal("When enabled, floating numbers move downward instead of upward"))
                 .setSaveConsumer(value -> config.floatingNumbersFlowDown = value)
                 .build());
 
-        advanced.addEntry(entryBuilder.startIntSlider(Text.literal("Floating Number Sway"), config.floatingNumbersSway, 0, 40)
+        advanced.addEntry(entryBuilder.startIntSlider(Component.literal("Floating Number Sway"), config.floatingNumbersSway, 0, 40)
                 .setDefaultValue(15)
-                .setTooltip(Text.literal("How wide the floating number S-curve drifts sideways"))
+                .setTooltip(Component.literal("How wide the floating number S-curve drifts sideways"))
                 .setSaveConsumer(value -> config.floatingNumbersSway = value)
                 .build());
         
-        advanced.addEntry(entryBuilder.startBooleanToggle(Text.literal("Track Historical Max"), config.trackHistoricalMax)
+        advanced.addEntry(entryBuilder.startBooleanToggle(Component.literal("Track Historical Max"), config.trackHistoricalMax)
                 .setDefaultValue(false)
-                .setTooltip(Text.literal("Track your max health over time"))
+                .setTooltip(Component.literal("Track your max health over time"))
                 .setSaveConsumer(value -> config.trackHistoricalMax = value)
                 .build());
         
-        advanced.addEntry(entryBuilder.startIntSlider(Text.literal("Historical Max Time (Minutes)"), config.historicalMaxMinutes, 1, 30)
+        advanced.addEntry(entryBuilder.startIntSlider(Component.literal("Historical Max Time (Minutes)"), config.historicalMaxMinutes, 1, 30)
                 .setDefaultValue(5)
-                .setTooltip(Text.literal("How far back to track max health"))
+                .setTooltip(Component.literal("How far back to track max health"))
                 .setSaveConsumer(value -> config.historicalMaxMinutes = value)
                 .build());
         
